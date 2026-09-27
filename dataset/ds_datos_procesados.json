@@ -1,0 +1,23 @@
+{
+	"name": "ds_datos_procesados",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_delivery",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "procesados",
+				"container": "datos-sucios"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

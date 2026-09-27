@@ -1,0 +1,22 @@
+{
+	"name": "ds_datos_sucios",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_delivery",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "datos-sucios"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
