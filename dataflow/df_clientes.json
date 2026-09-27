@@ -42,7 +42,7 @@
 				"!isNull(ciudad) &&\r",
 				"!isNull(email) &&\r",
 				"email != '',",
-				"     disjoint: false) ~> split1@(validos, )"
+				"     disjoint: false) ~> split1@(validos, rechazados)"
 			]
 		}
 	}
