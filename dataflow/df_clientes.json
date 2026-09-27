@@ -19,6 +19,9 @@
 				},
 				{
 					"name": "split1"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -42,7 +45,14 @@
 				"!isNull(ciudad) &&\r",
 				"!isNull(email) &&\r",
 				"email != '',",
-				"     disjoint: false) ~> split1@(validos, rechazados)"
+				"     disjoint: false) ~> split1@(validos, rechazados)",
+				"split1@validos aggregate(groupBy(cliente_id),",
+				"     nombre = first(nombre),",
+				"          email = first(email),",
+				"          telefono = first(telefono),",
+				"          ciudad = first(ciudad),",
+				"          fecha_registro = first(fecha_registro),",
+				"          segmento = first(segmento)) ~> aggregate1"
 			]
 		}
 	}
