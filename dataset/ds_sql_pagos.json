@@ -1,0 +1,43 @@
+{
+	"name": "ds_sql_pagos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_db_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "pago_id",
+				"type": "varchar"
+			},
+			{
+				"name": "pedido_id",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "metodo_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "estado_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "monto_pagado",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 2
+			}
+		],
+		"typeProperties": {
+			"schema": "delivery",
+			"table": "pagos"
+		}
+	}
+}
