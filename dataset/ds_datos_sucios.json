@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "clientes.csv",
 				"container": "datos-sucios"
 			},
 			"columnDelimiter": ",",
@@ -17,6 +18,35 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "cliente_id",
+				"type": "String"
+			},
+			{
+				"name": "nombre",
+				"type": "String"
+			},
+			{
+				"name": "email",
+				"type": "String"
+			},
+			{
+				"name": "telefono",
+				"type": "String"
+			},
+			{
+				"name": "ciudad",
+				"type": "String"
+			},
+			{
+				"name": "fecha_registro",
+				"type": "String"
+			},
+			{
+				"name": "segmento",
+				"type": "String"
+			}
+		]
 	}
 }
