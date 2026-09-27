@@ -10,8 +10,7 @@
 		"schema": [
 			{
 				"name": "cliente_id",
-				"type": "int",
-				"precision": 10
+				"type": "varchar"
 			},
 			{
 				"name": "nombre",
@@ -26,8 +25,16 @@
 				"type": "varchar"
 			},
 			{
+				"name": "ciudad",
+				"type": "varchar"
+			},
+			{
 				"name": "fecha_registro",
 				"type": "date"
+			},
+			{
+				"name": "segmento",
+				"type": "varchar"
 			}
 		],
 		"typeProperties": {
