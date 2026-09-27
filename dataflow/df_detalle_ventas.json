@@ -13,7 +13,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          detalle_id as string,",
@@ -26,7 +30,10 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1"
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(cantidad = lower(trim(cantidad)),",
+				"          precio_unitario = replace(replace(trim(precio_unitario),'bolivianos',''),',','.'),",
+				"          descuento_linea = lower(trim(descuento_linea))) ~> derivedColumn1"
 			]
 		}
 	}
