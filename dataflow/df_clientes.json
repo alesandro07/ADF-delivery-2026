@@ -22,6 +22,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -52,7 +55,8 @@
 				"          telefono = first(telefono),",
 				"          ciudad = first(ciudad),",
 				"          fecha_registro = first(fecha_registro),",
-				"          segmento = first(segmento)) ~> aggregate1"
+				"          segmento = first(segmento)) ~> aggregate1",
+				"aggregate1 derive(fecha_registro = toDate(fecha_registro)) ~> derivedColumn2"
 			]
 		}
 	}
