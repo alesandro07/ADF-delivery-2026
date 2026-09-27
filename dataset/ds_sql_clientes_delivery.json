@@ -1,0 +1,45 @@
+{
+	"name": "ds_sql_clientes_delivery",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_db_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cliente_id",
+				"type": "varchar"
+			},
+			{
+				"name": "nombre",
+				"type": "varchar"
+			},
+			{
+				"name": "email",
+				"type": "varchar"
+			},
+			{
+				"name": "telefono",
+				"type": "varchar"
+			},
+			{
+				"name": "ciudad",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_registro",
+				"type": "varchar"
+			},
+			{
+				"name": "segmento",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "delivery",
+			"table": "clientes"
+		}
+	}
+}
