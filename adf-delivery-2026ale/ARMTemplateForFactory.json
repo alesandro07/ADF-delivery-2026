@@ -218,7 +218,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_sql_clientes",
+								"referenceName": "ds_datos_procesados",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -262,27 +262,14 @@
 						"          cliente_id = first(cliente_id)) ~> aggregate1",
 						"aggregate1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          cliente_id as integer,",
-						"          nombre as string,",
-						"          email as string,",
-						"          telefono as string,",
-						"          fecha_registro as date",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     skipDuplicateMapOutputs: true) ~> sink1"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_datos_sucios')]",
-				"[concat(variables('factoryId'), '/datasets/ds_sql_clientes')]"
+				"[concat(variables('factoryId'), '/datasets/ds_datos_procesados')]"
 			]
 		},
 		{
