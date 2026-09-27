@@ -1,0 +1,43 @@
+{
+	"name": "ds_sql_productos_menu",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_db_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "producto_id",
+				"type": "varchar"
+			},
+			{
+				"name": "nombre_producto",
+				"type": "varchar"
+			},
+			{
+				"name": "categoria",
+				"type": "varchar"
+			},
+			{
+				"name": "precio_lista",
+				"type": "varchar"
+			},
+			{
+				"name": "costo_estimado",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 2
+			},
+			{
+				"name": "disponible",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "delivery",
+			"table": "productos_menu"
+		}
+	}
+}
