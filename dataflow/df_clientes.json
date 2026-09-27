@@ -12,7 +12,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_clientes",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -56,7 +64,35 @@
 				"          ciudad = first(ciudad),",
 				"          fecha_registro = first(fecha_registro),",
 				"          segmento = first(segmento)) ~> aggregate1",
-				"aggregate1 derive(fecha_registro = toDate(fecha_registro)) ~> derivedColumn2"
+				"aggregate1 derive(fecha_registro = toDate(fecha_registro)) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          cliente_id as string,",
+				"          nombre as string,",
+				"          email as string,",
+				"          telefono as string,",
+				"          ciudad as string,",
+				"          fecha_registro as date,",
+				"          segmento as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          cliente_id,",
+				"          nombre,",
+				"          email,",
+				"          telefono,",
+				"          ciudad,",
+				"          fecha_registro,",
+				"          segmento",
+				"     )) ~> sink1"
 			]
 		}
 	}
