@@ -1,0 +1,41 @@
+{
+	"name": "ds_sql_repartidores",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_db_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "repartidor_id",
+				"type": "varchar"
+			},
+			{
+				"name": "nombre_repartidor",
+				"type": "varchar"
+			},
+			{
+				"name": "tipo_vehiculo",
+				"type": "varchar"
+			},
+			{
+				"name": "ciudad_base",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_alta",
+				"type": "varchar"
+			},
+			{
+				"name": "activo",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "delivery",
+			"table": "repartidores"
+		}
+	}
+}
