@@ -109,6 +109,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "clientes.csv",
 						"container": "datos-sucios"
 					},
 					"columnDelimiter": ",",
@@ -116,7 +117,36 @@
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "cliente_id",
+						"type": "String"
+					},
+					{
+						"name": "nombre",
+						"type": "String"
+					},
+					{
+						"name": "email",
+						"type": "String"
+					},
+					{
+						"name": "telefono",
+						"type": "String"
+					},
+					{
+						"name": "ciudad",
+						"type": "String"
+					},
+					{
+						"name": "fecha_registro",
+						"type": "String"
+					},
+					{
+						"name": "segmento",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
@@ -195,6 +225,78 @@
 					"elapsedTimeMetric": {}
 				},
 				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_datos_sucios')]",
+				"[concat(variables('factoryId'), '/datasets/ds_datos_procesados')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_datos_sucios",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_datos_procesados",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "Validos"
+						},
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          cliente_id as string,",
+						"          nombre as string,",
+						"          email as string,",
+						"          telefono as integer,",
+						"          ciudad as string,",
+						"          fecha_registro as date,",
+						"          segmento as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(nombre = initCap(lower(trim(nombre))),",
+						"          ciudad = initCap(lower(trim(ciudad))),",
+						"          email = lower(trim(email))) ~> derivedColumn1",
+						"derivedColumn1 split(!isNull(cliente_id) && !isNull(nombre) && length(trim(nombre)) > 0,",
+						"     disjoint: false) ~> Validos@(Validos, Rechazados)",
+						"Validos@Validos aggregate(nombre = first(nombre),",
+						"          email = first(email),",
+						"          telefono = first(telefono),",
+						"          ciudad = first(ciudad),",
+						"          fecha_registro = first(fecha_registro),",
+						"          segmento = first(segmento)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_datos_sucios')]",
