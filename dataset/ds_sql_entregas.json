@@ -1,0 +1,53 @@
+{
+	"name": "ds_sql_entregas",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_db_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "entrega_id",
+				"type": "varchar"
+			},
+			{
+				"name": "pedido_id",
+				"type": "varchar"
+			},
+			{
+				"name": "repartidor_id",
+				"type": "varchar"
+			},
+			{
+				"name": "hora_salida",
+				"type": "varchar"
+			},
+			{
+				"name": "hora_entrega",
+				"type": "varchar"
+			},
+			{
+				"name": "tiempo_entrega_min",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 2
+			},
+			{
+				"name": "distancia_km",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 2
+			},
+			{
+				"name": "estado_entrega",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "delivery",
+			"table": "entregas"
+		}
+	}
+}
