@@ -1642,6 +1642,96 @@
 				"[concat(variables('factoryId'), '/datasets/ds_clientes_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sql_clientes')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_productos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_productos_menu_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sql_productos_menu",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "split1"
+						},
+						{
+							"name": "derivedColumn2"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          producto_id as string,",
+						"          nombre_producto as string,",
+						"          categoria as string,",
+						"          precio_lista as string,",
+						"          costo_estimado as string,",
+						"          disponible as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(categoria = initCap(lower(trim(categoria))),",
+						"          precio_texto = replace(     replace(trim(precio_lista), ' Bs', ''),     ',',     '.' )) ~> derivedColumn1",
+						"derivedColumn1 split(!isNull(producto_id) &&\r",
+						"!isNull(precio_lista) &&\r",
+						"!isNull(costo_estimado),",
+						"     disjoint: false) ~> split1@(validos, rechazados)",
+						"split1@validos derive(precio_texto = toDecimal(precio_texto),",
+						"          costo_estimado = toDecimal(costo_estimado)) ~> derivedColumn2",
+						"derivedColumn2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          producto_id as string,",
+						"          nombre_producto as string,",
+						"          categoria as string,",
+						"          precio_lista as string,",
+						"          costo_estimado as decimal(12,2),",
+						"          disponible as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          producto_id,",
+						"          nombre_producto,",
+						"          categoria,",
+						"          precio_lista = precio_texto,",
+						"          costo_estimado,",
+						"          disponible",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_productos_menu_csv')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sql_productos_menu')]"
+			]
 		}
 	]
 }
