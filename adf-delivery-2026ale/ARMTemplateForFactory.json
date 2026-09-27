@@ -10,6 +10,22 @@
 		"ls_blob_delivery_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"ls_blob_delivery\""
+		},
+		"ls_sql_db_ventas_password": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"password\"de \"ls_sql_db_ventas\""
+		},
+		"ls_sql_db_ventas_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sql-server-delivery-2026.database.windows.net"
+		},
+		"ls_sql_db_ventas_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "db_ventas"
+		},
+		"ls_sql_db_ventas_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "adminSQL"
 		}
 	},
 	"variables": {
@@ -159,6 +175,28 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('ls_blob_delivery_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sql_db_ventas')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('ls_sql_db_ventas_properties_typeProperties_server')]",
+					"database": "[parameters('ls_sql_db_ventas_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_sql_db_ventas_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_sql_db_ventas_password')]"
+					}
 				}
 			},
 			"dependsOn": []
