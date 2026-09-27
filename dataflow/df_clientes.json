@@ -32,7 +32,8 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(nombre = initCap(lower(trim(nombre))),",
-				"          ciudad = initCap(lower(trim(ciudad)))) ~> derivedColumn1"
+				"          ciudad = initCap(lower(trim(ciudad))),",
+				"          email = initCap(lower(trim(email)))) ~> derivedColumn1"
 			]
 		}
 	}
