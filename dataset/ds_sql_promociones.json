@@ -1,0 +1,42 @@
+{
+	"name": "ds_sql_promociones",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_db_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "promocion_id",
+				"type": "varchar"
+			},
+			{
+				"name": "nombre_promocion",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_inicio",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_fin",
+				"type": "varchar"
+			},
+			{
+				"name": "porcentaje_descuento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "canal_aplicable",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "delivery",
+			"table": "promociones"
+		}
+	}
+}
