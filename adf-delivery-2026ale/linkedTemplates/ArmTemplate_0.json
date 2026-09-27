@@ -153,6 +153,49 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_clientes')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_db_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "cliente_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "email",
+						"type": "varchar"
+					},
+					{
+						"name": "telefono",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_registro",
+						"type": "date"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "clientes"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_db_ventas')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -171,7 +214,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_datos_procesados",
+								"referenceName": "ds_sql_clientes",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -211,17 +254,31 @@
 						"          telefono = first(telefono),",
 						"          ciudad = first(ciudad),",
 						"          fecha_registro = first(fecha_registro),",
-						"          segmento = first(segmento)) ~> aggregate1",
+						"          segmento = first(segmento),",
+						"          cliente_id = first(cliente_id)) ~> aggregate1",
 						"aggregate1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          cliente_id as integer,",
+						"          nombre as string,",
+						"          email as string,",
+						"          telefono as string,",
+						"          fecha_registro as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_datos_sucios')]",
-				"[concat(variables('factoryId'), '/datasets/ds_datos_procesados')]"
+				"[concat(variables('factoryId'), '/datasets/ds_sql_clientes')]"
 			]
 		},
 		{
@@ -250,7 +307,8 @@
 								"datasetParameters": {
 									"source1": {},
 									"sink1": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
