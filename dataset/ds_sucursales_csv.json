@@ -1,0 +1,56 @@
+{
+	"name": "ds_sucursales_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_delivery",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "sucursales.csv",
+				"container": "datos-sucios"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "sucursal_id",
+				"type": "String"
+			},
+			{
+				"name": "restaurante_id",
+				"type": "String"
+			},
+			{
+				"name": "nombre_sucursal",
+				"type": "String"
+			},
+			{
+				"name": "ciudad",
+				"type": "String"
+			},
+			{
+				"name": "zona",
+				"type": "String"
+			},
+			{
+				"name": "direccion",
+				"type": "String"
+			},
+			{
+				"name": "capacidad_mesas",
+				"type": "String"
+			},
+			{
+				"name": "tiene_delivery",
+				"type": "String"
+			}
+		]
+	}
+}
