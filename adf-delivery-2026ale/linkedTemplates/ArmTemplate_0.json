@@ -68,7 +68,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_datos_procesados')]",
+			"name": "[concat(parameters('factoryName'), '/ds_calificaciones_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -81,7 +81,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"folderPath": "procesados",
+						"fileName": "calificaciones.csv",
 						"container": "datos-sucios"
 					},
 					"columnDelimiter": ",",
@@ -89,14 +89,39 @@
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "calificacion_id",
+						"type": "String"
+					},
+					{
+						"name": "pedido_id",
+						"type": "String"
+					},
+					{
+						"name": "cliente_id",
+						"type": "String"
+					},
+					{
+						"name": "fecha_calificacion",
+						"type": "String"
+					},
+					{
+						"name": "puntuacion",
+						"type": "String"
+					},
+					{
+						"name": "comentario",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_datos_sucios')]",
+			"name": "[concat(parameters('factoryName'), '/ds_clientes_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -153,6 +178,610 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_datos_procesados')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "procesados",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_detalle_pedidos_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "detalle_pedidos.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "detalle_id",
+						"type": "String"
+					},
+					{
+						"name": "pedido_id",
+						"type": "String"
+					},
+					{
+						"name": "producto_id",
+						"type": "String"
+					},
+					{
+						"name": "cantidad",
+						"type": "String"
+					},
+					{
+						"name": "precio_unitario",
+						"type": "String"
+					},
+					{
+						"name": "descuento_linea",
+						"type": "String"
+					},
+					{
+						"name": "total_linea",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_entregas_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "entregas.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "entrega_id",
+						"type": "String"
+					},
+					{
+						"name": "pedido_id",
+						"type": "String"
+					},
+					{
+						"name": "repartidor_id",
+						"type": "String"
+					},
+					{
+						"name": "hora_salida",
+						"type": "String"
+					},
+					{
+						"name": "hora_entrega",
+						"type": "String"
+					},
+					{
+						"name": "tiempo_entrega_min",
+						"type": "String"
+					},
+					{
+						"name": "distancia_km",
+						"type": "String"
+					},
+					{
+						"name": "estado_entrega",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_inventario_diario_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "inventario_diario.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "inventario_id",
+						"type": "String"
+					},
+					{
+						"name": "fecha_inventario",
+						"type": "String"
+					},
+					{
+						"name": "sucursal_id",
+						"type": "String"
+					},
+					{
+						"name": "producto_id",
+						"type": "String"
+					},
+					{
+						"name": "stock_inicial",
+						"type": "String"
+					},
+					{
+						"name": "entradas",
+						"type": "String"
+					},
+					{
+						"name": "salidas",
+						"type": "String"
+					},
+					{
+						"name": "stock_final",
+						"type": "String"
+					},
+					{
+						"name": "punto_reorden",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_pagos_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "pagos.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "pago_id",
+						"type": "String"
+					},
+					{
+						"name": "pedido_id",
+						"type": "String"
+					},
+					{
+						"name": "fecha_pago",
+						"type": "String"
+					},
+					{
+						"name": "metodo_pago",
+						"type": "String"
+					},
+					{
+						"name": "estado_pago",
+						"type": "String"
+					},
+					{
+						"name": "monto_pagado",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_pedidos_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "pedidos.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "pedido_id",
+						"type": "String"
+					},
+					{
+						"name": "fecha_pedido",
+						"type": "String"
+					},
+					{
+						"name": "hora_pedido",
+						"type": "String"
+					},
+					{
+						"name": "cliente_id",
+						"type": "String"
+					},
+					{
+						"name": "sucursal_id",
+						"type": "String"
+					},
+					{
+						"name": "canal",
+						"type": "String"
+					},
+					{
+						"name": "tipo_servicio",
+						"type": "String"
+					},
+					{
+						"name": "estado_pedido",
+						"type": "String"
+					},
+					{
+						"name": "promocion_id",
+						"type": "String"
+					},
+					{
+						"name": "subtotal",
+						"type": "String"
+					},
+					{
+						"name": "costo_delivery",
+						"type": "String"
+					},
+					{
+						"name": "descuento",
+						"type": "String"
+					},
+					{
+						"name": "impuesto",
+						"type": "String"
+					},
+					{
+						"name": "total_pedido",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_productos_menu_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "productos_menu.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "producto_id",
+						"type": "String"
+					},
+					{
+						"name": "nombre_producto",
+						"type": "String"
+					},
+					{
+						"name": "categoria",
+						"type": "String"
+					},
+					{
+						"name": "precio_lista",
+						"type": "String"
+					},
+					{
+						"name": "costo_estimado",
+						"type": "String"
+					},
+					{
+						"name": "disponible",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_promociones_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "promociones.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "promocion_id",
+						"type": "String"
+					},
+					{
+						"name": "nombre_promocion",
+						"type": "String"
+					},
+					{
+						"name": "fecha_inicio",
+						"type": "String"
+					},
+					{
+						"name": "fecha_fin",
+						"type": "String"
+					},
+					{
+						"name": "porcentaje_descuento",
+						"type": "String"
+					},
+					{
+						"name": "canal_aplicable",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_repartidores_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "repartidores.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "repartidor_id",
+						"type": "String"
+					},
+					{
+						"name": "nombre_repartidor",
+						"type": "String"
+					},
+					{
+						"name": "tipo_vehiculo",
+						"type": "String"
+					},
+					{
+						"name": "ciudad_base",
+						"type": "String"
+					},
+					{
+						"name": "fecha_alta",
+						"type": "String"
+					},
+					{
+						"name": "activo",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_restaurantes_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_delivery",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "restaurantes.csv",
+						"container": "datos-sucios"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "restaurante_id",
+						"type": "String"
+					},
+					{
+						"name": "nombre_restaurante",
+						"type": "String"
+					},
+					{
+						"name": "tipo_cocina",
+						"type": "String"
+					},
+					{
+						"name": "calificacion_promedio",
+						"type": "String"
+					},
+					{
+						"name": "activo",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_delivery')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_calificaciones')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_db_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "calificacion_id",
+						"type": "varchar"
+					},
+					{
+						"name": "pedido_id",
+						"type": "varchar"
+					},
+					{
+						"name": "cliente_id",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_calificacion",
+						"type": "varchar"
+					},
+					{
+						"name": "puntuacion",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "comentario",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "delivery",
+					"table": "calificaciones"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_db_ventas')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_sql_clientes')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -166,8 +795,7 @@
 				"schema": [
 					{
 						"name": "cliente_id",
-						"type": "int",
-						"precision": 10
+						"type": "varchar"
 					},
 					{
 						"name": "nombre",
@@ -182,8 +810,16 @@
 						"type": "varchar"
 					},
 					{
+						"name": "ciudad",
+						"type": "varchar"
+					},
+					{
 						"name": "fecha_registro",
 						"type": "date"
+					},
+					{
+						"name": "segmento",
+						"type": "varchar"
 					}
 				],
 				"typeProperties": {
@@ -196,123 +832,228 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
+			"name": "[concat(parameters('factoryName'), '/ds_sql_clientes_delivery')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"type": "MappingDataFlow",
+				"linkedServiceName": {
+					"referenceName": "ls_sql_db_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "cliente_id",
+						"type": "varchar"
+					},
+					{
+						"name": "nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "email",
+						"type": "varchar"
+					},
+					{
+						"name": "telefono",
+						"type": "varchar"
+					},
+					{
+						"name": "ciudad",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_registro",
+						"type": "varchar"
+					},
+					{
+						"name": "segmento",
+						"type": "varchar"
+					}
+				],
 				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_datos_sucios",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_datos_procesados",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "Validos"
-						},
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          cliente_id as string,",
-						"          nombre as string,",
-						"          email as string,",
-						"          telefono as integer,",
-						"          ciudad as string,",
-						"          fecha_registro as date,",
-						"          segmento as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(nombre = initCap(lower(trim(nombre))),",
-						"          ciudad = initCap(lower(trim(ciudad))),",
-						"          email = lower(trim(email))) ~> derivedColumn1",
-						"derivedColumn1 split(!isNull(cliente_id) && !isNull(nombre) && length(trim(nombre)) > 0,",
-						"     disjoint: false) ~> Validos@(Validos, Rechazados)",
-						"Validos@Validos aggregate(nombre = first(nombre),",
-						"          email = first(email),",
-						"          telefono = first(telefono),",
-						"          ciudad = first(ciudad),",
-						"          fecha_registro = first(fecha_registro),",
-						"          segmento = first(segmento),",
-						"          cliente_id = first(cliente_id)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
-					]
+					"schema": "delivery",
+					"table": "clientes"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_datos_sucios')]",
-				"[concat(variables('factoryId'), '/datasets/ds_datos_procesados')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_db_ventas')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/ds_sql_detalle_pedidos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"linkedServiceName": {
+					"referenceName": "ls_sql_db_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
 					{
-						"name": "dataflow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
+						"name": "detalle_id",
+						"type": "varchar"
+					},
+					{
+						"name": "pedido_id",
+						"type": "varchar"
+					},
+					{
+						"name": "producto_id",
+						"type": "varchar"
+					},
+					{
+						"name": "cantidad",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "precio_unitario",
+						"type": "varchar"
+					},
+					{
+						"name": "descuento_linea",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					},
+					{
+						"name": "total_linea",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
 					}
 				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
+				"typeProperties": {
+					"schema": "delivery",
+					"table": "detalle_pedidos"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_db_ventas')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_entregas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_db_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "entrega_id",
+						"type": "varchar"
+					},
+					{
+						"name": "pedido_id",
+						"type": "varchar"
+					},
+					{
+						"name": "repartidor_id",
+						"type": "varchar"
+					},
+					{
+						"name": "hora_salida",
+						"type": "varchar"
+					},
+					{
+						"name": "hora_entrega",
+						"type": "varchar"
+					},
+					{
+						"name": "tiempo_entrega_min",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					},
+					{
+						"name": "distancia_km",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					},
+					{
+						"name": "estado_entrega",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "delivery",
+					"table": "entregas"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_db_ventas')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_inventario_diario')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_db_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "inventario_id",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_inventario",
+						"type": "varchar"
+					},
+					{
+						"name": "sucursal_id",
+						"type": "varchar"
+					},
+					{
+						"name": "producto_id",
+						"type": "varchar"
+					},
+					{
+						"name": "stock_inicial",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "entradas",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "salidas",
+						"type": "varchar"
+					},
+					{
+						"name": "stock_final",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "punto_reorden",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "delivery",
+					"table": "inventario_diario"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_db_ventas')]"
 			]
 		}
 	]
