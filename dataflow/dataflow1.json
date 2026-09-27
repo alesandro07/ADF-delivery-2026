@@ -12,10 +12,24 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_datos_procesados",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "Validos"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -23,15 +37,29 @@
 				"          cliente_id as string,",
 				"          nombre as string,",
 				"          email as string,",
-				"          telefono as string,",
+				"          telefono as integer,",
 				"          ciudad as string,",
-				"          fecha_registro as string,",
+				"          fecha_registro as date,",
 				"          segmento as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive() ~> derivedColumn1"
+				"source1 derive(nombre = initCap(lower(trim(nombre))),",
+				"          ciudad = initCap(lower(trim(ciudad))),",
+				"          email = lower(trim(email))) ~> derivedColumn1",
+				"derivedColumn1 split(!isNull(cliente_id) && !isNull(nombre) && length(trim(nombre)) > 0,",
+				"     disjoint: false) ~> Validos@(Validos, Rechazados)",
+				"Validos@Validos aggregate(nombre = first(nombre),",
+				"          email = first(email),",
+				"          telefono = first(telefono),",
+				"          ciudad = first(ciudad),",
+				"          fecha_registro = first(fecha_registro),",
+				"          segmento = first(segmento)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
