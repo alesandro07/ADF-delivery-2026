@@ -16,6 +16,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -33,7 +36,13 @@
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(nombre = initCap(lower(trim(nombre))),",
 				"          ciudad = initCap(lower(trim(ciudad))),",
-				"          email = initCap(lower(trim(email)))) ~> derivedColumn1"
+				"          email = initCap(lower(trim(email)))) ~> derivedColumn1",
+				"derivedColumn1 split(!isNull(cliente_id) &&\r",
+				"!isNull(nombre) &&\r",
+				"!isNull(ciudad) &&\r",
+				"!isNull(email) &&\r",
+				"email != '',",
+				"     disjoint: false) ~> split1@(validos, )"
 			]
 		}
 	}
