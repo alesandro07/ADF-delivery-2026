@@ -1,0 +1,44 @@
+{
+	"name": "ds_restaurantes_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_delivery",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "restaurantes.csv",
+				"container": "datos-sucios"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "restaurante_id",
+				"type": "String"
+			},
+			{
+				"name": "nombre_restaurante",
+				"type": "String"
+			},
+			{
+				"name": "tipo_cocina",
+				"type": "String"
+			},
+			{
+				"name": "calificacion_promedio",
+				"type": "String"
+			},
+			{
+				"name": "activo",
+				"type": "String"
+			}
+		]
+	}
+}
