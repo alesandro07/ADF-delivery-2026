@@ -16,6 +16,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -33,7 +36,19 @@
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(cantidad = lower(trim(cantidad)),",
 				"          precio_unitario = replace(replace(trim(precio_unitario),'bolivianos',''),',','.'),",
-				"          descuento_linea = lower(trim(descuento_linea))) ~> derivedColumn1"
+				"          descuento_linea = lower(trim(descuento_linea))) ~> derivedColumn1",
+				"derivedColumn1 split(!isInteger(cantidad)\r",
+				"||\r",
+				"!isDecimal(precio_unitario)\r",
+				"||\r",
+				"!isDecimal(descuento_linea)\r",
+				"||\r",
+				"!isDecimal(total_linea)\r",
+				"||\r",
+				"toDecimal(descuento_linea) < 0\r",
+				"||\r",
+				"toDecimal(descuento_linea) > 100,",
+				"     disjoint: false) ~> split1@(rechazados, validos)"
 			]
 		}
 	}
