@@ -1,0 +1,15 @@
+{
+	"name": "adf-delivery-2026ale",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "feddff4c-7ec4-425b-a960-1702703b9f15",
+		"tenantId": "cc28633f-12b8-46cb-bc15-951dae239b4d"
+	}
+}
