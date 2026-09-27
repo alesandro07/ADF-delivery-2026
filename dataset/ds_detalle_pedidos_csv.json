@@ -1,0 +1,52 @@
+{
+	"name": "ds_detalle_pedidos_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_delivery",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "detalle_pedidos.csv",
+				"container": "datos-sucios"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "detalle_id",
+				"type": "String"
+			},
+			{
+				"name": "pedido_id",
+				"type": "String"
+			},
+			{
+				"name": "producto_id",
+				"type": "String"
+			},
+			{
+				"name": "cantidad",
+				"type": "String"
+			},
+			{
+				"name": "precio_unitario",
+				"type": "String"
+			},
+			{
+				"name": "descuento_linea",
+				"type": "String"
+			},
+			{
+				"name": "total_linea",
+				"type": "String"
+			}
+		]
+	}
+}
