@@ -19,6 +19,9 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "cast1"
 				}
 			],
 			"scriptLines": [
@@ -49,7 +52,11 @@
 				"    instr(fecha_pedido, '/') > 0,\r",
 				"    toDate(fecha_pedido, 'dd/MM/yyyy'),\r",
 				"    toDate(fecha_pedido, 'yyyy-MM-dd')\r",
-				")) ~> derivedColumn2"
+				")) ~> derivedColumn2",
+				"derivedColumn2 cast(output(",
+				"          pedido_id as string",
+				"     ),",
+				"     errors: true) ~> cast1"
 			]
 		}
 	}
