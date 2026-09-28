@@ -54,11 +54,11 @@
 				"    toDate(fecha_pedido, 'yyyy-MM-dd')\r",
 				")) ~> derivedColumn2",
 				"derivedColumn2 cast(output(",
-				"          subtotal as decimal(10,0),",
-				"          costo_delivery as decimal(10,0),",
-				"          descuento as decimal(10,0),",
-				"          impuesto as decimal(10,0),",
-				"          total_pedido as decimal(10,0)",
+				"          subtotal as double,",
+				"          costo_delivery as double,",
+				"          descuento as double,",
+				"          impuesto as double,",
+				"          total_pedido as double",
 				"     ),",
 				"     errors: true) ~> cast1"
 			]
