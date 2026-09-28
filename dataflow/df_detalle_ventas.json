@@ -55,9 +55,9 @@
 				"     disjoint: false) ~> split1@(rechazados, validos)",
 				"split1@validos cast(output(",
 				"          cantidad as integer,",
-				"          precio_unitario as decimal(10,0),",
-				"          descuento_linea as decimal(10,0),",
-				"          total_linea as decimal(10,0)",
+				"          precio_unitario as double,",
+				"          descuento_linea as double,",
+				"          total_linea as double",
 				"     ),",
 				"     errors: true) ~> cast1"
 			]
