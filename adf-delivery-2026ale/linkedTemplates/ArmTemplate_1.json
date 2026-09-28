@@ -433,6 +433,92 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_ventas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_db_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "pedido_id",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_pedido",
+						"type": "varchar"
+					},
+					{
+						"name": "hora_pedido",
+						"type": "varchar"
+					},
+					{
+						"name": "cliente_id",
+						"type": "varchar"
+					},
+					{
+						"name": "sucursal_id",
+						"type": "varchar"
+					},
+					{
+						"name": "canal",
+						"type": "varchar"
+					},
+					{
+						"name": "tipo_servicio",
+						"type": "varchar"
+					},
+					{
+						"name": "estado_pedido",
+						"type": "varchar"
+					},
+					{
+						"name": "promocion_id",
+						"type": "varchar"
+					},
+					{
+						"name": "subtotal",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					},
+					{
+						"name": "costo_delivery",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					},
+					{
+						"name": "descuento",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					},
+					{
+						"name": "impuesto",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					},
+					{
+						"name": "total_pedido",
+						"type": "decimal",
+						"precision": 12,
+						"scale": 2
+					}
+				],
+				"typeProperties": {
+					"schema": "delivery",
+					"table": "pedidos"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_clientes')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -727,6 +813,128 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_ventas')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_pedidos_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sql_ventas",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "cast1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          pedido_id as string,",
+						"          fecha_pedido as string,",
+						"          hora_pedido as string,",
+						"          cliente_id as string,",
+						"          sucursal_id as string,",
+						"          canal as string,",
+						"          tipo_servicio as string,",
+						"          estado_pedido as string,",
+						"          promocion_id as string,",
+						"          subtotal as string,",
+						"          costo_delivery as string,",
+						"          descuento as string,",
+						"          impuesto as string,",
+						"          total_pedido as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(canal = lower(trim(canal)),",
+						"          fecha_pedido = trim(fecha_pedido),",
+						"          promocion_id = iif(isNull(promocion_id), 'sin promocion', trim(promocion_id))\r",
+						") ~> derivedColumn1",
+						"derivedColumn1 derive(fecha_pedido = iif(\r",
+						"    instr(fecha_pedido, '/') > 0,\r",
+						"    toDate(fecha_pedido, 'dd/MM/yyyy'),\r",
+						"    toDate(fecha_pedido, 'yyyy-MM-dd')\r",
+						")) ~> derivedColumn2",
+						"derivedColumn2 cast(output(",
+						"          subtotal as double,",
+						"          costo_delivery as double,",
+						"          descuento as double,",
+						"          impuesto as double,",
+						"          total_pedido as double",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"cast1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          pedido_id as string,",
+						"          fecha_pedido as string,",
+						"          hora_pedido as string,",
+						"          cliente_id as string,",
+						"          sucursal_id as string,",
+						"          canal as string,",
+						"          tipo_servicio as string,",
+						"          estado_pedido as string,",
+						"          promocion_id as string,",
+						"          subtotal as decimal(12,2),",
+						"          costo_delivery as decimal(12,2),",
+						"          descuento as decimal(12,2),",
+						"          impuesto as decimal(12,2),",
+						"          total_pedido as decimal(12,2)",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          pedido_id,",
+						"          fecha_pedido,",
+						"          hora_pedido,",
+						"          cliente_id,",
+						"          sucursal_id,",
+						"          canal,",
+						"          tipo_servicio,",
+						"          estado_pedido,",
+						"          promocion_id,",
+						"          subtotal,",
+						"          costo_delivery,",
+						"          descuento,",
+						"          impuesto,",
+						"          total_pedido",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sql_ventas')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
