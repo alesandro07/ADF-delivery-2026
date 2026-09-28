@@ -16,6 +16,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -41,7 +44,12 @@
 				"source1 derive(canal = lower(trim(canal)),",
 				"          fecha_pedido = trim(fecha_pedido),",
 				"          promocion_id = iif(isNull(promocion_id), 'sin promocion', trim(promocion_id))\r",
-				") ~> derivedColumn1"
+				") ~> derivedColumn1",
+				"derivedColumn1 derive(fecha_pedido = iif(\r",
+				"    instr(fecha_pedido, '/') > 0,\r",
+				"    toDate(fecha_pedido, 'dd/MM/yyyy'),\r",
+				"    toDate(fecha_pedido, 'yyyy-MM-dd')\r",
+				")) ~> derivedColumn2"
 			]
 		}
 	}
